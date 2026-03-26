@@ -1,11 +1,8 @@
-# Build stage
-FROM eclipse-temurin:17-jdk-alpine AS build
+# Build stage (Using official Maven to completely bypass Windows errors)
+FROM maven:3.8.5-openjdk-17 AS build
 WORKDIR /app
 COPY . .
-# Ithu thaan antha magic line (Windows to Linux format converter)
-RUN sed -i 's/\r$//' mvnw
-RUN chmod +x mvnw
-RUN ./mvnw clean package -DskipTests
+RUN mvn clean package -DskipTests
 
 # Run stage
 FROM eclipse-temurin:17-jre-alpine
